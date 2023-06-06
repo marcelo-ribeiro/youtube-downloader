@@ -65,7 +65,7 @@ function downloadHighres(videoId, res) {
   // Baixa o arquivo de vídeo em formato MP4
   function downloadVideo() {
     console.log("Download de vídeo inciado!");
-    ytdl(url, { filter: "videoonly", quality: "137" })
+    ytdl(url, { filter: "videoonly" })
       .pipe(fs.createWriteStream(videoOutputPath))
       .on("finish", () => {
         console.log("Download de vídeo completo!");
