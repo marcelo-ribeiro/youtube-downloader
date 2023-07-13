@@ -107,8 +107,38 @@ function downloadHighres(videoId, res) {
   init();
 }
 
-// downloadLowres();
-// downloadHighres();
+function downloadAudio(videoId, res) {
+  const url = videoUrl + videoId;
+  const audioOutputPath = `files/audio-${videoId}.mp4`;
 
-const youtube = { downloadHighres, downloadLowres };
+  downloadAudio();
+
+  // Baixa o arquivo de áudio em formato MP4
+  function downloadAudio() {
+    console.log("Download de áudio inciado!");
+    ytdl(url, {
+      filter: "audioonly",
+      quality: "highestaudio",
+      audioQuality: "AUDIO_QUALITY_MEDIUM",
+    })
+      .pipe(fs.createWriteStream(audioOutputPath))
+      .on("finish", () => {
+        console.log("Download de áudio completo!");
+
+        res.download(audioOutputPath, `${videoId}.mp4`, (error) => {
+          if (error) {
+            console.error("Erro ao fazer o download:", error);
+            res.status(500).send("Erro ao fazer o download do arquivo.");
+          }
+          // Após o download, exclua o arquivo temporário
+          fs.unlinkSync(audioOutputPath);
+        });
+      })
+      .on("error", (error) => {
+        console.error("Ocorreu um erro durante o download de áudio:", error);
+      });
+  }
+}
+
+const youtube = { downloadHighres, downloadLowres, downloadAudio };
 export default youtube;
