@@ -109,7 +109,7 @@ function downloadHighres(videoId, res) {
 
 function downloadAudio(videoId, res) {
   const url = videoUrl + videoId;
-  const audioOutputPath = `files/audio-${videoId}.mp4`;
+  const audioOutputPath = `files/audio-${videoId}.mp3`;
 
   downloadAudio();
 
@@ -125,7 +125,7 @@ function downloadAudio(videoId, res) {
       .on("finish", () => {
         console.log("Download de áudio completo!");
 
-        res.download(audioOutputPath, `${videoId}.mp4`, (error) => {
+        res.download(audioOutputPath, `${videoId}.mp3`, (error) => {
           if (error) {
             console.error("Erro ao fazer o download:", error);
             res.status(500).send("Erro ao fazer o download do arquivo.");
