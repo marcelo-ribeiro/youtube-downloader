@@ -15,7 +15,7 @@ function downloadLowres(videoId, res) {
     .pipe(fs.createWriteStream(videoOutputPath))
     .on("finish", () => {
       console.log("Download completo!");
-      res.download(mergedOutputPath, `${videoId}.mp4`, (error) => {
+      res.download(videoOutputPath, `${videoId}.mp4`, (error) => {
         if (error) {
           console.error("Erro ao fazer o download:", error);
           res.status(500).send("Erro ao fazer o download do arquivo.");
@@ -116,26 +116,13 @@ function downloadAudio(videoId, res) {
   // Baixa o arquivo de áudio em formato MP4
   function downloadAudio() {
     console.log("Download de áudio inciado!");
-    ytdl(url, {
-      filter: "audioonly",
-      quality: "highestaudio",
-      audioQuality: "AUDIO_QUALITY_MEDIUM",
-    })
+    ytdl(url, { filter: "audioonly", quality: "highestaudio" })
       .pipe(fs.createWriteStream(audioOutputPath))
       .on("finish", () => {
-        console.log("Download de áudio completo!");
-
-        res.download(audioOutputPath, `${videoId}.mp3`, (error) => {
-          if (error) {
-            console.error("Erro ao fazer o download:", error);
-            res.status(500).send("Erro ao fazer o download do arquivo.");
-          }
-          // Após o download, exclua o arquivo temporário
-          fs.unlinkSync(audioOutputPath);
-        });
+        console.log("Download do áudio completo!");
       })
       .on("error", (error) => {
-        console.error("Ocorreu um erro durante o download de áudio:", error);
+        console.error("Ocorreu um erro durante o download do áudio:", error);
       });
   }
 }
