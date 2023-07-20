@@ -109,7 +109,8 @@ function downloadHighres(videoId, res) {
 
 function downloadAudio(videoId, res) {
   const url = videoUrl + videoId;
-  const audioOutputPath = `files/audio-${videoId}.mp3`;
+  const audioName = `audio-${videoId}.mp3`;
+  const audioOutputPath = `files/${audioName}`;
 
   downloadAudio();
 
@@ -120,6 +121,15 @@ function downloadAudio(videoId, res) {
       .pipe(fs.createWriteStream(audioOutputPath))
       .on("finish", () => {
         console.log("Download do áudio completo!");
+
+        res.download(audioOutputPath, audioName, (error) => {
+          if (error) {
+            console.error("Erro ao fazer o download:", error);
+            res.status(500).send("Erro ao fazer o download do arquivo.");
+          }
+          // Após o download, exclua os arquivos temporários
+          fs.unlinkSync(audioOutputPath);
+        });
       })
       .on("error", (error) => {
         console.error("Ocorreu um erro durante o download do áudio:", error);
