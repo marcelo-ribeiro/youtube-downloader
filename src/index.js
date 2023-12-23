@@ -117,24 +117,39 @@ function downloadAudio(videoId, res) {
   // Baixa o arquivo de áudio em formato MP4
   function downloadAudio() {
     console.log("Download de áudio inciado!");
-    ytdl(url, { filter: "audioonly", quality: "highestaudio" })
+    ytdl(url, {
+      filter: "audioonly",
+      audioQuality: "AUDIO_QUALITY_MEDIUM",
+    })
       .pipe(fs.createWriteStream(audioOutputPath))
       .on("finish", () => {
-        console.log("Download do áudio completo!");
-
-        res.download(audioOutputPath, audioName, (error) => {
-          if (error) {
-            console.error("Erro ao fazer o download:", error);
-            res.status(500).send("Erro ao fazer o download do arquivo.");
-          }
-          // Após o download, exclua os arquivos temporários
-          fs.unlinkSync(audioOutputPath);
-        });
+        console.log("Download de áudio completo!");
+        downloadVideo();
       })
       .on("error", (error) => {
-        console.error("Ocorreu um erro durante o download do áudio:", error);
+        console.error("Ocorreu um erro durante o download de áudio:", error);
       });
   }
+  // function downloadAudio() {
+  //   console.log("Download de áudio inciado!");
+  //   ytdl(url, { filter: "audioonly", quality: "highestaudio" })
+  //     .pipe(fs.createWriteStream(audioOutputPath))
+  //     .on("finish", () => {
+  //       console.log("Download do áudio completo!");
+
+  //       res.download(audioOutputPath, audioName, (error) => {
+  //         if (error) {
+  //           console.error("Erro ao fazer o download:", error);
+  //           res.status(500).send("Erro ao fazer o download do arquivo.");
+  //         }
+  //         // Após o download, exclua os arquivos temporários
+  //         fs.unlinkSync(audioOutputPath);
+  //       });
+  //     })
+  //     .on("error", (error) => {
+  //       console.error("Ocorreu um erro durante o download do áudio:", error);
+  //     });
+  // }
 }
 
 const youtube = { downloadHighres, downloadLowres, downloadAudio };
