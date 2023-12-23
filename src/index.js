@@ -124,7 +124,15 @@ function downloadAudio(videoId, res) {
       .pipe(fs.createWriteStream(audioOutputPath))
       .on("finish", () => {
         console.log("Download de áudio completo!");
-        downloadVideo();
+
+        res.download(audioOutputPath, audioName, (error) => {
+          if (error) {
+            console.error("Erro ao fazer o download:", error);
+            res.status(500).send("Erro ao fazer o download do arquivo.");
+          }
+          // Após o download, exclua os arquivos temporários
+          fs.unlinkSync(audioOutputPath);
+        });
       })
       .on("error", (error) => {
         console.error("Ocorreu um erro durante o download de áudio:", error);
